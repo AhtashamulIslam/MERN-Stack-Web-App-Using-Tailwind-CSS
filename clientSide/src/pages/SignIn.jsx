@@ -1,11 +1,91 @@
-import React from 'react'
+import { Label, TextInput , Button, Alert, Spinner } from 'flowbite-react'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-function Signin() {
+function SignIn() {
+   const [formData,setFormData]=useState({})
+   const [errorMessage,setErrorMessage]=useState(null)
+   const [loading,setLoading]=useState(false)
+   const navigate=useNavigate()
+   
+   const handleChange = (e)=>{
+      setFormData({...formData,[e.target.id]:e.target.value.trim()})
+      //Here each time the field data will be destructed which will be stored in fromData as a single valued object. And every time the field data be filled via id and add to the destructured properties.
+   }
+   
+   const handleSubmit = async (e)=>{
+    e.preventDefault()
+    if(!formData.email || !formData.password)
+       return setErrorMessage('Please fill out all fields')
+    try{
+        setLoading(true)
+        setErrorMessage(null)// Set them to update the previous states
+        const res = await fetch(`/api/auth/signin`,{
+          method:'POST',
+          headers: {'Content-Type':'application/json'},
+          body:JSON.stringify(formData)
+        })
+        const data = await res.json()
+        //Contains the response status like success and message
+        if(data.success===false)
+          return setErrorMessage(data.message)
+        setLoading(false)
+        if(res.ok)
+          navigate('/')
+    }catch(error){
+      //Handling from client side.
+      setErrorMessage(error.message)
+      setLoading(false)
+    }
+   }
   return (
-    <div>
-      SignIn 
+    <div className='min-h-screen mt-20 '>
+      <div className='flex flex-col px-8 sm:px-12  max-w-3xl mx-auto md:flex-row md:p-3 md:items-center gap-5 '>
+        <div className='flex-1'>
+        <Link to='/' className='text-4xl dark:text-white font-bold'>
+        <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white'>Ahtasham's</span> 
+         Blog
+        </Link>
+        <p className='text-sm mt-5'>This is a personal project. You can sign in with your email and password or with Google</p>
+        </div>
+        <div className='flex-1'>
+          <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+           
+           <div className='space-y-1'>
+          <Label value='Your email'/>
+          <TextInput type='email' placeholder='name@company.com' id='email' onChange={handleChange}/>
+           </div>
+           <div className='space-y-1'>
+          <Label value='Your password'/>
+          <TextInput type='password' placeholder='Password' id='password' onChange={handleChange}/>
+           </div>
+           <Button gradientDuoTone='purpleToPink' type='submit' disabled={loading}>
+            {
+              loading ? (
+                <>
+                <Spinner size='sm'/>
+                <span className='pl-3'>Loading...</span>
+                </>
+              ) : 'Sign In'
+            }
+           </Button>
+          </form>
+          <div className='flex gap-2 mt-5 text-sm'>
+            <span>Don't Have an account ?</span>
+            <Link to='/signup' className='text-blue-600'>
+            Sign Up
+            </Link>
+          </div>
+            { errorMessage && (
+             <Alert className='mt-5' color='failure'>
+              {errorMessage}
+             </Alert>
+            )
+          }
+        </div>
+      </div>
     </div>
   )
 }
 
-export default Signin
+export default SignIn
