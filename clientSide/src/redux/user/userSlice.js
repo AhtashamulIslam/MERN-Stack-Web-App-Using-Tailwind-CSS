@@ -30,4 +30,4 @@ const userSlice = createSlice({
 
 export const { signInStart , signInSuccess , signInFailure} = userSlice.actions
     // The reducer function will be added in userSlice object in actions property
-export default userSlice.reducer
+export default userSlice.reducer  // All the functionalities are considered as a reducer.
