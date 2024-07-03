@@ -62,3 +62,40 @@ export const signin = async (req, res, next) => {
       next(error);
     }
   };
+
+export const google = async (req,res,next)=>{
+       const {email,name,googlePhotoUrl}=req.body // Coming from frontend .
+       
+       try {
+         const user=await User.findOne({email}) 
+         //Check that user has an account having a 
+          // same email as the google account has.
+          if(user){
+             const token = jwt.sign({id:user._id},process.env.JWT_SECRET_KEY)
+             const {password,...rest}=user._doc //Delete the password
+             res.status(200).cookie('access_token',token,{
+              httpOnly:true
+             }).json(rest)
+
+          }else{//If there is no existing account having that gmail account 
+                 //we will create a new one.
+            const generatedPassword = Math.random().toString(36).slice(-8)+Math.random().toString(36).slice(-8)
+            const hashedPassword=bcryptjs.hashSync(generatedPassword,10)
+            const newUser = new User({
+              username:name.toLowerCase().split(' ').join('')+Math.random().toString(9).slice(-4),
+              //Ahtashamul Islam => ahtashamulislaml556
+              email,
+              password:hashedPassword,
+              profilePicture:googlePhotoUrl
+            })
+            await newUser.save()
+            const token = jwt.sign({id: newUser._id },process.env.JWT_SECRET_KEY)
+             const {password,...rest}=newUser._doc //Delete the password
+             res.status(200).cookie('access_token',token,{
+              httpOnly:true
+             }).json(rest)
+          }
+        } catch (error) {
+           next(error)
+       }
+}

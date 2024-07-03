@@ -3,8 +3,9 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
 import { signInFailure,signInSuccess,signInStart } from '../redux/user/userSlice'
+import OAuth from '../components/OAuth'
 //In order to use these functions we have to dispatch them using useDispatch.
-//
+
 function SignIn() {
    const [formData,setFormData]=useState({})
    const {loading,error:errorMessage}=useSelector(state=>state.user)
@@ -14,7 +15,7 @@ function SignIn() {
 
    const handleChange = (e)=>{
       setFormData({...formData,[e.target.id]:e.target.value.trim()})
-      //Here each time the field data will be destructed which will be stored in fromData as a single valued object. And every time the field data be filled via id and add to the destructured properties.
+      //Here each time the field data will be destructed which will be stored in fromData as a single valued object. And every time the field data be filled via id and add to the destructured properties and form an object.
    }
    
    const handleSubmit = async (e)=>{
@@ -72,6 +73,7 @@ function SignIn() {
               ) : 'Sign In'
             }
            </Button>
+           <OAuth />
           </form>
           <div className='flex gap-2 mt-5 text-sm'>
             <span>Don't Have an account ?</span>
