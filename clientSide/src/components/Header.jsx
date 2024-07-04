@@ -3,12 +3,17 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import {AiOutlineSearch} from 'react-icons/ai'
-import { FaMoon } from 'react-icons/fa'
-import {useSelector} from 'react-redux' // We have imported user data from state.user from
-                                        // userSlice.js 
+import { FaMoon,FaSun } from 'react-icons/fa'
+import {useDispatch, useSelector} from 'react-redux' // We have imported user data from 
+                                            //state.user from userSlice by useSelector.
+                                   //And invoke the reducer function by useDispatch.
+import {toggleTheme} from '../redux/theme/themeSlice'
+                            //This is theme reducer function.
 function Header() {
     const path=useLocation().pathname
+    const dispatch=useDispatch()  // We call the reducer [toggleTheme func] here
     const {currentUser}=useSelector(state=>state.user)
+    const {theme}=useSelector(state=>state.theme)
   return (
     <Navbar className='border-b-2'>
         <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl dark:text-white font-semibold'>
@@ -27,8 +32,12 @@ function Header() {
             <AiOutlineSearch/>
         </Button>
         <div className='flex gap-2 md:order-2'>
-            <Button className='w-12 h-10 hidden sm:inline' color='gray' pill>
-                <FaMoon />
+            <Button className='w-12 h-10 hidden sm:inline md:ml-3' 
+            color='gray' 
+            pill
+            onClick={()=>dispatch(toggleTheme())}
+            >
+              {theme==='light' ? <FaMoon /> : <FaSun /> }
             </Button>
             { currentUser ? 
             (
