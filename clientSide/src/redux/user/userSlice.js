@@ -14,7 +14,7 @@ const userSlice = createSlice({
               state.loading=true
               state.error=null
         },
-        signInSuccess:(state,action)=>{  //When we get a response back after sign In json(rest)
+        signInSuccess:(state,action)=>{  //When we get a response back after sign In json(rest) as action.payload
               state.currentUser=action.payload
               state.loading=false
               state.error=null
@@ -22,12 +22,29 @@ const userSlice = createSlice({
         signInFailure:(state,action)=>{
             state.loading=false
             state.error=action.payload // Take the error as response when get error at the time of signing in.
+        },
+        updateStart:(state)=>{ // Start when we about to update user data.
+            state.loading=true
+            state.error=null
+        },
+        updateSuccess:(state,action)=>{
+            state.currentUser=action.payload // Update the user data in current User.
+            state.loading=false
+            state.error=null
+        },
+        updateFailure:(state,action)=>{
+            state.loading=false,
+            state.error=action.payload
         }
-        
 
     }
 })
 
-export const { signInStart , signInSuccess , signInFailure} = userSlice.actions
+export const { signInStart ,
+               signInSuccess , 
+               signInFailure , 
+               updateStart , 
+               updateSuccess , 
+               updateFailure} = userSlice.actions
     // The reducer function will be added in userSlice object in actions property
 export default userSlice.reducer  // All the functionalities are considered as a reducer.
