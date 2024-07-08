@@ -43,8 +43,9 @@ export const signin = async (req, res, next) => {
         return next(errorHandler(400, 'Invalid password'));
       }
          //For valid user we set a token which will be encrypted.And save this to the Cookie of the browser and use it later to authenticate the user.
-
-         const token = jwt.sign({ id: validUser._id },
+         // We add id and isAdmin to ensure the user is an admin or not.
+         
+         const token = jwt.sign({ id: validUser._id , isAdmin:validUser.isAdmin },
                   process.env.JWT_SECRET_KEY//A secret key , user's have Cookie encrypted by this key.
                   //{expiresIn:'1d'} Add an expiration time for the Cookie if don't add anything ,this is going to be expired when the user close their browser like a one-time session.
                 );
@@ -71,7 +72,7 @@ export const google = async (req,res,next)=>{
          //Check that user has an account having a 
           // same email as the google account has.
           if(user){
-             const token = jwt.sign({id:user._id},process.env.JWT_SECRET_KEY)
+             const token = jwt.sign({id:user._id , isAdmin:user.isAdmin},process.env.JWT_SECRET_KEY)
              const {password,...rest}=user._doc //Delete the password
              res.status(200).cookie('access_token',token,{
               httpOnly:true
@@ -89,7 +90,7 @@ export const google = async (req,res,next)=>{
               profilePicture:googlePhotoUrl
             })
             await newUser.save()
-            const token = jwt.sign({id: newUser._id },process.env.JWT_SECRET_KEY)
+            const token = jwt.sign({id: newUser._id , isAdmin:newUser.isAdmin},process.env.JWT_SECRET_KEY)
              const {password,...rest}=newUser._doc //Delete the password
              res.status(200).cookie('access_token',token,{
               httpOnly:true
