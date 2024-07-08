@@ -9,11 +9,29 @@ import {useDispatch, useSelector} from 'react-redux' // We have imported user da
                                    //And invoke the reducer function by useDispatch.
 import {toggleTheme} from '../redux/theme/themeSlice'
                             //This is theme reducer function.
+import { signOutSuccess } from '../redux/user/userSlice'
+
 function Header() {
     const path=useLocation().pathname
     const dispatch=useDispatch()  // We call the reducer [toggleTheme func] here
     const {currentUser}=useSelector(state=>state.user)
     const {theme}=useSelector(state=>state.theme)
+
+    const handleSignOut=async ()=>{
+      try {
+        const res =await fetch(`/api/user/signout`,{
+          method:'POST'
+        })
+        const data = await res.json()
+        if(!res.ok){
+          console.log(data.message)
+        }else{
+          dispatch(signOutSuccess())
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
   return (
     <Navbar className='border-b-2'>
         <Link to='/' className='self-center whitespace-nowrap text-sm sm:text-xl dark:text-white font-semibold'>
@@ -59,7 +77,7 @@ function Header() {
                 <Link to='/dashboard?tab=profile'>
                  <Dropdown.Item>Profile</Dropdown.Item>
                  <Dropdown.Divider/>
-                 <Dropdown.Item>Sign Out</Dropdown.Item>
+                 <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
                 </Link>
 
               </Dropdown>

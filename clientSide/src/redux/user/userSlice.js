@@ -48,6 +48,11 @@ const userSlice = createSlice({
         deleteUserFailure:(state,action)=>{
             state.loading=false;
             state.error=action.payload;
+        },
+        signOutSuccess:(state)=>{
+            state.currentUser=null
+            state.loading=false
+            state.error=null
         }
 
     }
@@ -61,6 +66,7 @@ export const { signInStart ,
                updateFailure,
                deleteUserStart,
                deleteUserSuccess,
-               deleteUserFailure} = userSlice.actions
+               deleteUserFailure,
+               signOutSuccess} = userSlice.actions
     // The reducer function will be added in userSlice object in actions property
 export default userSlice.reducer  // All the functionalities are considered as a reducer.
