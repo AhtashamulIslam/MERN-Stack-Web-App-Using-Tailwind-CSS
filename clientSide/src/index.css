@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body{
+      height:100vh;
+}
+
+/*This is customization for React Quill Editor*/
+
+.ql-editor{
+   font-size: 1rem;
+}
