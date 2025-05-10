@@ -34,5 +34,64 @@ export const createPost = async (req,res,next) =>{
       } catch (error) {
         next(error)
       }
+};
 
+// Create a get post function. 
+
+export const getPosts = async (req,res,next)=>{
+
+      try {
+             // We create a request body by request query. 
+             const startIndex = parseInt(req.query.startIndex) || 0;
+             const limit = parseInt(req.query.limit) || 9;
+             const sortDirection = req.query.order === 'asc' ? 1 : -1; // if 1 DB will sort ascending 
+                                                                // otherwise sort descending. 
+           // We set a list of queries by which we can fetch the posts. 
+           const posts = await Post.find({
+              ...(req.query.userId && { userId : req.query.userId}), // Fetch all the posts of the user
+              ...(req.query.category && { category : req.query.category}),// Fetch all the posts of same category.
+              ...(req.query.slug && { slug : req.query.slug}), // Fetch all the posts of specific slug
+              ...(req.query.postId && { _id : req.query.postId}),// Fetch specific post of that id. 
+              ...(req.query.searchTerm && {
+               $or : [
+                  {title: { $regex: req.query.searchTerm , $options: 'i'}}, // Search items fetched ( case insensitive)
+                  {content: { $regex: req.query.searchTerm , $options: 'i'}}
+               ]
+              })
+      }).sort({ updateAt: sortDirection}).skip(startIndex).limit(limit);// We set post limit in a page
+               // updateAt is for sorting order. 
+
+       // Now we count the total post within a particular time like last month/week. 
+        const totalPosts = await Post.countDocuments();
+
+        const now = new Date();
+        const oneMonthAgo = new Date(
+         now.getFullYear(),
+         now.getMonth() - 1,
+         now.getDate()
+        )
+
+        const lastMonthPosts = await Post.countDocuments({
+         createdAt: { $gte : oneMonthAgo } // It will give us the post created after oneMonthAgo objects time. 
+        });
+
+        // Now we sent all in our response. 
+        res.status(200).json({
+           posts,
+           totalPosts,
+           lastMonthPosts
+        });
+      } catch (error) {
+         next(error)
+      }
 }
+  
+
+
+
+
+
+
+
+
+
