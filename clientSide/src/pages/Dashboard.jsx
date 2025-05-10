@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import DashSidebar from '../components/DashSidebar'
 import DashProfile from '../components/DashProfile'
+import DashPosts from '../components/DashPosts'
 
 function Dashboard() {
   const location=useLocation() // to determine in which tab user visits.
@@ -22,6 +23,8 @@ function Dashboard() {
       </div>
       {/*Profile*/}
       {tab==='profile' && <DashProfile />}
+      {/*Posts*/}
+      {tab==='posts' && <DashPosts />}
     </div>
   )
 }
