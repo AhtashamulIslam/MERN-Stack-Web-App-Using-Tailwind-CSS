@@ -41,12 +41,12 @@ app.use('/api/comment',commentRoutes) // This api route is for to comment below 
 
 // Now we set static directory for our deployment server.
 
-app.use(express.static(path.join(__dirname, '/client/dist')));
+//app.use(express.static(path.join(__dirname, '/client/dist')));
 
 // Now except our api routes, it will execute our client side paths. 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'))
+// });
 
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500
