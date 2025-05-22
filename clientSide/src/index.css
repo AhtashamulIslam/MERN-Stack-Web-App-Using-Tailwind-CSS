@@ -3,11 +3,41 @@
 @tailwind utilities;
 
 body{
-      height:100vh;
+      height:100vh; 
 }
 
-/*This is customization for React Quill Editor*/
+/* Here we style our text document from textarea. */
 
-.ql-editor{
-   font-size: 1rem;
-}
+ .post-content p{
+       margin-bottom: 0.5rem;
+ }
+
+ .post-content h1{
+      font-size: 1.5rem;
+      font-weight:600;
+      font-family: sans-serif;
+      margin: 1.5rem 0;
+ }
+
+ .post-content a{
+      color: rgb(73, 149, 199);
+      text-decoration: none;
+ }
+
+ .post-content a:hover {
+      text-decoration: underline;
+ }
+
+ .dark .post-content a {
+      color:red;
+      
+ }
+
+ .setbackground {
+    background: linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)) ,url('./assets/images.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+ }
+
+

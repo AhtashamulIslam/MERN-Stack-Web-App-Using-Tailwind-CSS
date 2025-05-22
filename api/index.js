@@ -5,6 +5,7 @@ import userRoutes from './routes/user.route.js'
 import authRoutes from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
 import postRoutes from './routes/post.route.js'
+import commentRoutes from './routes/comment.route.js'
 
 dotenv.config()
 
@@ -31,6 +32,7 @@ app.use('/api/user', userRoutes) // Here /api/user/[route will be concated here]
 
 app.use('/api/auth' , authRoutes)
 app.use('/api/post', postRoutes) // This api route for a blog post. 
+app.use('/api/comment',commentRoutes) // This api route is for to comment below a post. 
 
 //Add a Middleware and a function to handle error and invoke it from auth.controller.js 
 // catch block. 

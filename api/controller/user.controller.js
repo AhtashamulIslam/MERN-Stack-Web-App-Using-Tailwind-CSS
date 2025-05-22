@@ -66,7 +66,8 @@ export const updateUser = async (req,res,next)=>{
 
 export const deleteUser=async (req,res,next)=>{
   //Check the user Id from Cookie whether it is the owner or not
-   if(req.user.id!==req.params.userId){
+  // if the user is admin then it will proceed the try block to delete. 
+   if(!req.user.isAdmin && req.user.id !== req.params.userId){
       return next(errorHandler(400,'You are not allowed to delete this user'))
    }
    try {
@@ -87,5 +88,79 @@ export const signOut=async (req,res,next)=>{
         next(error)
     }
 }
+
+// We will send a list of total users who created account. 
+
+export const getUsers = async (req,res,next)=>{
+
+     if(!req.user.isAdmin){
+        return next(errorHandler(403,"You are not allowed to see all users."))
+     }
+     try {
+           // Here we set functionality to get the users just like get posts. 
+          const startIndex = parseInt(req.query.startIndex) || 0; 
+          const limit = parseInt(req.query.limit) || 9;
+          const sortdirection = req.query.sort === 'asc' ? 1 : -1;
+
+          const users = await User.find()
+            .sort({ createdAt: sortdirection}) // We sort the users based on the time of creation. 
+            .skip(startIndex)
+            .limit(limit)
+
+         // We get the users with password but we need to remove the password from user. 
+         const usersWithoutPassword = users.map((user)=>{
+             const {password, ...rest} = user._doc;// We set each user without password.
+             return rest; 
+             // Finally we have an array of users without password. 
+         })
+          // Total Users count. 
+
+          const totalUsers = await User.countDocuments();
+ 
+          // Last month users.
+          const now = new Date();
+          const oneMonthAgo = new Date(
+             now.getFullYear(),
+             now.getMonth()-1,
+             now.getDate()
+          )
+
+          const lastMonthUsers = await User.countDocuments({
+
+              createdAt : { $gte: oneMonthAgo},
+          });
+  
+        res.status(200).json({
+          users: usersWithoutPassword,
+          totalUsers,
+          lastMonthUsers
+     })
+
+     } catch (error) {
+        next(error)
+     }
+}
+
+// We use this user in comment component.
+export const getUser = async (req,res,next)=>{
+
+     try {
+       const user = await User.findById(req.params.userId);
+       if(!user){
+          return next(errorHandler(403,'user not found'))
+       }
+       const { password, ...rest} = user._doc;
+       res.status(200).json(rest);
+     } catch (error) {
+        next(error)
+     }
+    
+}
+
+
+
+
+
+
 
 
