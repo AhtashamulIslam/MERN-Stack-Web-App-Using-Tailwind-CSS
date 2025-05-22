@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
 import postRoutes from './routes/post.route.js'
 import commentRoutes from './routes/comment.route.js'
+import path from 'path' // We declare this to deploy in Cloud and to create dynamic route. 
 
 dotenv.config()
 
@@ -19,6 +20,7 @@ mongoose.connect(
     console.log(err)
 })
 
+const __dirname = path.resolve();
 const app=express()
 
 app.use(express.json())
@@ -36,6 +38,15 @@ app.use('/api/comment',commentRoutes) // This api route is for to comment below 
 
 //Add a Middleware and a function to handle error and invoke it from auth.controller.js 
 // catch block. 
+
+// Now we set static directory for our deployment server.
+
+app.use(express.static(path.join(__dirname, '/client/dist')));
+
+// Now except our api routes, it will execute our client side paths. 
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500
