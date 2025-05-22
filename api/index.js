@@ -12,6 +12,7 @@ dotenv.config()
 
 mongoose.connect(
     process.env.mongo_connection_string
+    // Connection string.
 )
 .then(()=>{
     console.log('Connected to Database')
