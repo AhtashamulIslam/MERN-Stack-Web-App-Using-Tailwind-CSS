@@ -13,7 +13,7 @@ function About() {
               Welcome to Public Blog! This blog was created by Ahtashamul Islam
               as a personal project to share his thoughts and ideas with the
               world. Ahtasham is a passionate developer who loves to write about
-              technology, coding, and everything in between.
+              technology, coding, and everything in between. Explore to know more.
             </p>
 
             <p>
