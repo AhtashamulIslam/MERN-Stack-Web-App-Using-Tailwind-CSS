@@ -6,7 +6,7 @@ import authRoutes from './routes/auth.route.js'
 import cookieParser from 'cookie-parser'
 import postRoutes from './routes/post.route.js'
 import commentRoutes from './routes/comment.route.js'
-import path from 'path' // We declare this to deploy in Cloud and to create dynamic route. 
+import path from 'path' // We declare this to deploy in Cloud and to create dynamic route in our project. 
 
 dotenv.config()
 
